@@ -69,6 +69,7 @@ module ISO8583
   # [+YYMMCodec+]         encodes Time, Datetime or String to the described date format (exp date), 
   #                       checking that it is a valid date. Decodes to a DateTime instance, decoding
   #                       and encoding perform validity checks!
+  # [+EBCDIC+]
   #
   class Codec
     attr_accessor :encoder
@@ -219,4 +220,12 @@ module ISO8583
   YYMMCodec         = _date_codec("%y%m")
   MMDDCodec         = _date_codec("%m%d")
 
+  EBCDIC_Codec = Codec.new
+  EBCDIC_Codec.encoder = lambda do |str|
+    str.encode('IBM037')
+    raise ISO8583Exception.new('String is missing!') unless str.present?
+
+    ascii2ebcdic str
+  end
+  EBCDIC_Codec.decoder = ->(str) { ebcdic2ascii(str).strip[2..-1] }
 end

@@ -37,6 +37,7 @@ module ISO8583
   # [+YYMMDDhhmmss+] Date, formatted as named in ASCII numerals
   # [+YYMM+]         Expiration Date, formatted as named in ASCII numerals
   # [+Hhmmss+]       Date, formatted in ASCII hhmmss
+  # [+EBCDIC+]
 
 
   # Special form to de/encode variable length indicators, two bytes ASCII numerals 
@@ -172,4 +173,8 @@ module ISO8583
   Hhmmss.codec  = HhmmssCodec
   Hhmmss.length = 6
 
+  EBCDIC = Field.new
+  EBCDIC.codec = EBCDIC_Codec
+  EBCDIC.length = LL
+  EBCDIC.padding = ->(str) { str.strip }
 end
